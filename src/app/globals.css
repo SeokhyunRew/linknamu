@@ -16,3 +16,190 @@ body {
   color: var(--foreground);
   background: var(--background);
 }
+
+/* ================= 배경 장면 공통 ================= */
+.scene-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.scene-layer {
+  position: absolute;
+  inset: 0;
+}
+
+/* ================= 다크 모드: 광안대교 밤바다 (my-intro) ================= */
+.night-bg {
+  /* 밤하늘: 위는 깊은 남색, 수평선 쪽으로 갈수록 밝아짐 */
+  background: linear-gradient(180deg, #020617 0%, #071433 35%, #0b1e3f 60%, #1e3a5f 78%, #0a1a33 100%);
+}
+
+.night-star {
+  position: absolute;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0.85;
+  animation: night-twinkle var(--dur, 3s) ease-in-out var(--delay, 0s) infinite;
+}
+
+@keyframes night-twinkle {
+  0%, 100% { opacity: 0.9; }
+  50% { opacity: 0.2; }
+}
+
+.night-floater {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(224, 242, 254, 0.95) 0%, rgba(56, 189, 248, 0.5) 45%, transparent 70%);
+  opacity: 0.6;
+  animation: night-float var(--dur, 14s) linear var(--delay, 0s) infinite;
+}
+
+@keyframes night-float {
+  0% { transform: translate(0, 0); opacity: 0; }
+  15% { opacity: 0.85; }
+  85% { opacity: 0.6; }
+  100% { transform: translate(var(--dx, 0px), -140px); opacity: 0; }
+}
+
+.night-scene {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 46vh;
+  min-height: 260px;
+}
+
+.night-bridge-lights {
+  animation: night-hue 14s linear infinite;
+}
+
+@keyframes night-hue {
+  from { filter: hue-rotate(0deg); }
+  to { filter: hue-rotate(360deg); }
+}
+
+.night-reflection {
+  transform-box: fill-box;
+  transform-origin: top;
+  animation: night-shimmer var(--dur, 3s) ease-in-out var(--delay, 0s) infinite alternate;
+}
+
+@keyframes night-shimmer {
+  from { opacity: 0.15; transform: scaleY(0.85); }
+  to { opacity: 0.45; transform: scaleY(1.05); }
+}
+
+/* ================= 밝은 모드: 눈 덮인 산속 오두막 ================= */
+.snow-bg {
+  /* 눈 오는 겨울 하늘: 위는 차가운 회청색, 아래로 갈수록 밝아짐 */
+  background: linear-gradient(180deg, #8fa7c2 0%, #b3c4d8 40%, #dbe4ee 75%, #eef3f8 100%);
+}
+
+.snow-scene {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 58vh;
+  min-height: 320px;
+}
+
+.snow-flake {
+  position: absolute;
+  top: 0;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 3px rgba(100, 116, 139, 0.35);
+  animation: snow-fall var(--dur, 12s) linear var(--delay, 0s) infinite;
+}
+
+@keyframes snow-fall {
+  0% { transform: translate3d(0, -5vh, 0); }
+  50% { transform: translate3d(calc(var(--dx, 0px) * -0.5), 50vh, 0); }
+  100% { transform: translate3d(var(--dx, 0px), 105vh, 0); }
+}
+
+.snow-flame {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: snow-flame 0.9s ease-in-out infinite alternate;
+}
+.snow-flame-1 { animation-duration: 0.8s; }
+.snow-flame-2 { animation-duration: 0.6s; animation-delay: -0.3s; }
+.snow-flame-3 { animation-duration: 0.7s; animation-delay: -0.5s; }
+
+@keyframes snow-flame {
+  0% { transform: scale(0.85, 0.8) skewX(-4deg); opacity: 0.85; }
+  50% { transform: scale(1.05, 1.1) skewX(3deg); opacity: 1; }
+  100% { transform: scale(0.95, 0.95) skewX(-2deg); opacity: 0.9; }
+}
+
+.snow-flicker {
+  animation: snow-flicker 1.4s ease-in-out infinite alternate;
+}
+
+@keyframes snow-flicker {
+  0% { opacity: 0.7; }
+  40% { opacity: 1; }
+  70% { opacity: 0.8; }
+  100% { opacity: 0.95; }
+}
+
+.snow-smoke {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  animation: snow-smoke 6s ease-out var(--delay, 0s) infinite;
+}
+
+@keyframes snow-smoke {
+  0% { transform: translate(0, 0) scale(0.5); opacity: 0; }
+  15% { opacity: 0.7; }
+  100% { transform: translate(30px, -90px) scale(2.4); opacity: 0; }
+}
+
+/* ---------- 휴대폰 화면 ---------- */
+@media (max-width: 480px) {
+  .night-scene {
+    height: 40vh;
+  }
+
+  .snow-scene {
+    height: 50vh;
+  }
+
+  /* 작은 화면에서는 눈송이를 절반만 */
+  .snow-flake:nth-child(2n) {
+    display: none;
+  }
+}
+
+/* ---------- 모션 최소화 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .night-star,
+  .night-floater,
+  .night-bridge-lights,
+  .night-reflection,
+  .snow-flake,
+  .snow-flame,
+  .snow-flicker,
+  .snow-smoke {
+    animation: none !important;
+  }
+
+  .night-reflection {
+    opacity: 0.3;
+  }
+
+  /* 눈송이는 화면 곳곳에 멈춰 있게 */
+  .snow-flake:nth-child(3n) { top: 20%; }
+  .snow-flake:nth-child(3n + 1) { top: 45%; }
+  .snow-flake:nth-child(3n + 2) { top: 70%; }
+}
